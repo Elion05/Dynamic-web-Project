@@ -1,0 +1,38 @@
+.navigatie{
+    background-color: rgb(109, 128, 145);
+}
+.navigatie ul{
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+.navigatie li{
+    margin: 5px;
+    padding: 15px;
+    display: inline-block;
+}
+.navigatie a{
+    padding: 1rem;
+    display: block;
+    text-decoration: none;
+    color: aliceblue;
+}
+.navigatie a:hover{
+    background-color: rgb(65, 76, 86);
+    transition: 0.4s;
+    border-radius: 5px;
+    color: aliceblue;
+}
+body.dark-theme{
+    background-color: #252525;
+    color: #fff;
+}
+body.light-theme{
+    background-color: #fff;
+    color: #1c1b1b;
+}
+.theme-button{
+    padding: 10px;
+    margin: 20px;
+    cursor: grab;
+}

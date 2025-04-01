@@ -1,13 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>BrusselsExplorer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    demo 
+    <header>
+        <h1>BrusselsExplorer</h1>
+        <nav class="navigatie">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#locations">Locaties</a></li>
+                <li><a href="#favorites">Favorieten</a></li>
+                <li><a href="#settings">Instellingen</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <button id="themeToggle" class="theme-button">Press here for dark mode!</button>
     
+    <main>
+        <section id="search">
+            <input type="text" id="searchBar" placeholder="Zoek naar een locatie...">
+            <button id="searchButton">Zoeken</button>
+        </section>
+        
+        <section id="filters">
+            <label for="category">Categorie:</label>
+            <select id="category">
+                <option value="all">Alle</option>
+                <option value="culture">Cultuur</option>
+                <option value="history">Geschiedenis</option>
+                <option value="parks">Parken</option>
+            </select>
+            
+            <label for="sort">Sorteren op:</label>
+            <select id="sort">
+                <option value="name">Naam</option>
+                <option value="date">Datum</option>
+            </select>
+        </section>
+        
+        <section id="locations">
+            <h2>Locaties</h2>
+            <div id="locationsList">
+                <!-- Dynamisch geladen content -->
+            </div>
+        </section>
+        
+        <section id="favorites">
+            <h2>Favorieten</h2>
+            <div id="favoritesList">
+                <!-- Gebruikersfavorieten -->
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2025 BrusselsExplorer</p>
+    </footer>
+    
+    <script src="script.js"></script>
 </body>
 </html>
