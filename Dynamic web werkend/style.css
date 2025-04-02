@@ -75,7 +75,7 @@ header {
     margin-bottom: 20px;
 }
 
-#locatiesList{
+#locaties, #favorites {
     background-color: #9bc8f4;
     padding: 15px;
     border-radius: 8px;
@@ -89,7 +89,7 @@ h2 {
     margin-bottom: 10px;
 }
 /*Favorties + locaties*/ 
-#locaties-container{
+#locatiesList, #favoritenList{
     padding: 10px;
     background-color: #fbf1f1;
     border-radius: 4px;
@@ -157,4 +157,40 @@ footer li a:hover{
 
 .foutmelding1{
     color: red;
+}
+
+.location img {
+    width: 100%; /* Zorg ervoor dat de afbeelding de breedte van de container volgt */
+    max-width: 300px; /* Maximale breedte van de afbeelding */
+    height: auto; /* Zorg ervoor dat de verhoudingen van de afbeelding behouden blijven */
+    margin-bottom: 10px; /* Optioneel, voor wat ruimte onder de afbeelding */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+img {
+    width: 150px;
+    height: auto;
+}
+
+/* Alle afbeeldingen in de tabel hetzelfde formaat geven */
+table img {
+    width: 200px;     /* Standaard breedte van de afbeelding */
+    height: 200px;    /* Standaard hoogte van de afbeelding */
+    object-fit: cover; /* Zorgt ervoor dat de afbeelding proportioneel binnen het vak past zonder vervorming */
 }

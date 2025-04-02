@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrusselsExplorer</title>
-    <link rel="stylesheet" href="/Dynamic Web project/style.css">
+    <link rel="stylesheet" href="/Dynamic web werkend/style.css">
 </head>
 <body>
 
@@ -44,8 +44,23 @@
         
         <section id="locatiesList">
             <h2>Locaties</h2>
-            <div id="locaties-container">
-                <!--Alle content van de api zal hier komen ongeveer 70 locaties-->
+            <div id="Locaties">
+                <!-- Alle content van de API zal hier komen, ongeveer 70 locaties -->
+            </div>
+        </section>
+
+        <section id="mapSection">
+            <h2>Interactiviteit: Locaties op de Kaart</h2>
+            <!-- Kaart via de embed iframe -->
+            <iframe width="100%" height="500" frameborder="0" 
+                src="https://opendata.brussels.be/explore/embed/dataset/bruxelles_parcours_bd/map/?disjunctive.dessinateur&disjunctive.commune_gemeente&disjunctive.maison_d_edition&disjunctive.realisateur&location=10,50.22279,4.87779&basemap=jawg.sunny" 
+                style="border: 0" allowfullscreen></iframe>
+        </section>
+
+        <section id="favorites">
+            <h2>Favorieten</h2>
+            <div id="favoritenList">
+                <!-- Gebruikersfavorieten -->
             </div>
         </section>
     </main>
@@ -59,9 +74,7 @@
             <li><a href="#">Instellingen</a></li>
         </ul>
     </footer>
-    
-    
-    
-    <script src="/Dynamic Web project/script.js"></script>
+
+    <script src="/Dynamic web werkend/script.js"></script>
 </body>
 </html>
