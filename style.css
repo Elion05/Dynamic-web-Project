@@ -1,3 +1,4 @@
+/*Dit is de navigatie bar*/
 .navigatie{
     background-color: rgb(109, 128, 145);
 }
@@ -23,6 +24,7 @@
     border-radius: 5px;
     color: aliceblue;
 }
+/*Dit is voor de buttons zodat het van kleur kan veranderen, hier kan je dan de kleur aanpassen*/
 body.dark-theme{
     background-color: #252525;
     color: #fff;
@@ -35,4 +37,12 @@ body.light-theme{
     padding: 10px;
     margin: 20px;
     cursor: grab;
+    background-color: rgb(63, 152, 208);
+    border-radius: 10px;
+    display: flex;
+    justify-self: center;
+}
+.theme-button:hover{
+    background-color: rgb(111, 168, 203);
+    transition: 0.4s;
 }

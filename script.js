@@ -1,8 +1,7 @@
 "use strict";
-
+//dit is voor de achtergrond te switchen van donker naar licht
 const backgroundToggle = document.getElementById('themeToggle');
 const body = document.body;
-
 function background (){
     //controlleer het huidige achtergrond thema
     if(body.classList.contains('light-theme')){
@@ -19,9 +18,7 @@ function background (){
         localStorage.setItem('theme', 'light-theme')
     }
 }
-
 backgroundToggle.addEventListener('click', background);
-
 function achtergrondLaden () {
     //de opgeslagen thema die in de localstorage zit eruit halen
     const savedBackground = localStorage.getItem('theme');
@@ -37,3 +34,4 @@ function achtergrondLaden () {
     }
 }
 achtergrondLaden();
+
