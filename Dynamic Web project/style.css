@@ -1,10 +1,11 @@
 
 body {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
     background-color: #f9f9f9;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 header {
     background-color: #556532;
@@ -15,6 +16,7 @@ header {
     margin-bottom: 20px;
 }
 
+/*Navigatie bar, werkt niet gewoon voor decoratie*/
 .navigatie ul {
     list-style: none;
     padding: 0;
@@ -39,7 +41,7 @@ header {
 .navigatie ul li a:hover {
     background-color: #3367d6;
 }
-
+/*Zoekbalk*/
 #zoeken{
     text-align: center;
     margin-bottom: 20px;
@@ -73,7 +75,7 @@ header {
     margin-bottom: 20px;
 }
 
-#locations, #favorites {
+#locaties, #favorites {
     background-color: #9bc8f4;
     padding: 15px;
     border-radius: 8px;
@@ -87,7 +89,7 @@ h2 {
     margin-bottom: 10px;
 }
 /*Favorties + locaties*/ 
-#locationsList, #favoritesList {
+#locatiesList, #favoritenList{
     padding: 10px;
     background-color: #fbf1f1;
     border-radius: 4px;
@@ -151,4 +153,8 @@ footer li a{
 footer li a:hover{
     color: rgb(61, 192, 236);
     transition: 0.4s;
+}
+
+.foutmelding1{
+    color: red;
 }
