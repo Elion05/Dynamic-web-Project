@@ -1,8 +1,3 @@
-
-
-
-
-
 "use strict";
 
 // Achtergrond thema switchen
@@ -21,6 +16,7 @@ function background() {
     }
 }
 backgroundToggle.addEventListener('click', background);
+
 function achtergrondLaden() {
     const savedBackground = localStorage.getItem('theme');
     if (savedBackground) {
@@ -29,7 +25,6 @@ function achtergrondLaden() {
     }
 }
 achtergrondLaden();
-
 
 // HTML-elementen ophalen
 const locatieContainer = document.getElementById("Locaties");
@@ -42,52 +37,118 @@ let locations = [];
 // API-data ophalen
 async function fetchLocations() {
     try {
-        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=10");
+        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=20");
+
+        if (!response.ok) {
+            throw new Error(`Fout bij ophalen van data: ${response.status} ${response.statusText}`);
+        }
+
         const data = await response.json();
-        locations = data.results;
-        renderLocations();
+        console.log('API Response Data:', data);
+
+        // Gebruik de juiste array: results, niet records
+        if (data && data.results) {
+            locations = data.results;  // Verander naar results
+            renderLocations();
+        } else {
+            throw new Error("Geen records gevonden in de API-response.");
+        }
+
     } catch (error) {
+        console.error('Er is een fout opgetreden:', error);
         locatieContainer.innerHTML = "<p class='foutmelding1'>Fout bij het laden van locaties.</p>";
     }
 }
 
-// Locaties renderen op de pagina
+// Locaties renderen op de pagina in een tabel
 function renderLocations() {
     const zoekterm = zoekbar.value.toLowerCase();
     const selectedCategory = category.value;
     const sorteerMethode = sorteren.value;
 
     let gefilterdeLocaties = locations.filter(loc => 
-        loc.titre_fr.toLowerCase().includes(zoekterm) || loc.titre_nl.toLowerCase().includes(zoekterm)
+        loc.naam_fresco_nl.toLowerCase().includes(zoekterm) || loc.nom_de_la_fresque.toLowerCase().includes(zoekterm)
     );
 
+    // Filteren op categorie (indien nodig)
     if (selectedCategory !== "all") {
         gefilterdeLocaties = gefilterdeLocaties.filter(loc => loc.categorie === selectedCategory);
     }
 
+    // Sorteren
     gefilterdeLocaties.sort((a, b) => {
-        if (sorteerMethode === "name") return a.titre_fr.localeCompare(b.titre_fr);
+        if (sorteerMethode === "name") return a.naam_fresco_nl.localeCompare(b.naam_fresco_nl);
         if (sorteerMethode === "date") return new Date(b.date) - new Date(a.date);
     });
 
-    locatieContainer.innerHTML = "";
+    locatieContainer.innerHTML = "";  // Clear container
 
     if (gefilterdeLocaties.length === 0) {
         locatieContainer.innerHTML = "<p class='geen-resultaten'>Geen locaties gevonden.</p>";
         return;
     }
 
-    gefilterdeLocaties.forEach(loc => {
-        const locElement = document.createElement("div");
-        locElement.classList.add("location");
-        locElement.innerHTML = `
-            <h3>${loc.titre_fr} (${loc.titre_nl})</h3>
-            <p>${loc.description_fr || loc.description_nl || "Geen beschrijving beschikbaar."}</p>
-            <p><strong>Categorie:</strong> ${loc.categorie || "Onbekend"}</p>
-            <p><strong>Adres:</strong> ${loc.adresse_fr || loc.adresse_nl || "Geen adres beschikbaar"}</p>
-        `;
-        locationsList.appendChild(locElement);
+    // Maak de tabel
+    const tabel = document.createElement('table');
+    tabel.style.width = '100%';
+    tabel.style.border = '1px solid #ddd';
+    tabel.style.borderCollapse = 'collapse';
+
+    // Tabel kop
+    const header = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = ['Titel', 'Categorie', 'Adres', 'Afbeelding'];
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        th.style.padding = '10px';
+        th.style.textAlign = 'left';
+        th.style.borderBottom = '2px solid #ddd';
+        headerRow.appendChild(th);
     });
+    header.appendChild(headerRow);
+    tabel.appendChild(header);
+
+    // Tabel body vullen met locaties
+    const body = document.createElement('tbody');
+    gefilterdeLocaties.forEach(loc => {
+        const row = document.createElement('tr');
+
+        // Titel
+        const titleCell = document.createElement('td');
+        titleCell.textContent = `${loc.nom_de_la_fresque} (${loc.naam_fresco_nl})`;
+        titleCell.style.padding = '10px';
+        titleCell.style.borderBottom = '1px solid #ddd';
+        row.appendChild(titleCell);
+
+        // Categorie
+        const categoryCell = document.createElement('td');
+        categoryCell.textContent = loc.categorie || 'Onbekend';
+        categoryCell.style.padding = '10px';
+        categoryCell.style.borderBottom = '1px solid #ddd';
+        row.appendChild(categoryCell);
+
+        // Adres
+        const addressCell = document.createElement('td');
+        addressCell.textContent = loc.adresse || loc.adres || 'Geen adres beschikbaar';
+        addressCell.style.padding = '10px';
+        addressCell.style.borderBottom = '1px solid #ddd';
+        row.appendChild(addressCell);
+
+        // Afbeelding
+        const imageCell = document.createElement('td');
+        const img = document.createElement('img');
+        img.src = loc.image || 'https://via.placeholder.com/200';  // Default image als geen afbeelding beschikbaar
+        img.alt = loc.nom_de_la_fresque || 'Locatie afbeelding';
+        imageCell.appendChild(img);
+        imageCell.style.padding = '10px';
+        imageCell.style.borderBottom = '1px solid #ddd';
+        row.appendChild(imageCell);
+
+        body.appendChild(row);
+    });
+    tabel.appendChild(body);
+    locatieContainer.appendChild(tabel);
 }
 
 // Event listeners
