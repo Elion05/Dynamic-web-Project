@@ -8,7 +8,7 @@ body {
     transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
 }
 header {
-    background-color: #556532;
+    background-color: #22a6db;
     color: white;
     padding: 15px;
     text-align: center;
@@ -39,7 +39,7 @@ header {
 }
 
 .navigatie ul li a:hover {
-    background-color: #3367d6;
+    color: #000000;
 }
 /*Zoekbalk*/
 #zoeken{
@@ -91,7 +91,7 @@ h2 {
 /*Favorties + locaties*/ 
 #locatiesList, #favoritenList{
     padding: 10px;
-    background-color: #fbf1f1;
+    background-color: #c9c8c8;
     border-radius: 4px;
     border: 1px solid #ddd;
 }
@@ -100,14 +100,14 @@ h2 {
 select, input {
     padding: 8px;
     margin-right: 10px;
-    border: 1px solid #aefacb;
+    border: 1px solid #f6f8f7;
     border-radius: 4px;
-    cursor: grab;
+    cursor:pointer
 }
 
 /*Dit is voor de localstorage zodat die deze background onthoud*/
 body.dark-theme{
-    background-color: #252525;
+    background-color: #343232;
     color: #000000;
 }
 body.light-theme{
@@ -121,7 +121,7 @@ body.light-theme{
     background-color: rgb(63, 152, 208);
     border-radius: 10px;
     display: flex;
-    justify-self: center;
+    
 }
 .theme-button:hover{
     background-color: rgb(190, 218, 236);
@@ -131,7 +131,7 @@ body.light-theme{
 
 /*Footer html css maar het werkt niet gewoon decoratie*/
 footer {
-    background-color: #4c4f53;
+    background-color: #22a6db;
     color: white;
     text-align: center;
     padding: 15px;
@@ -151,24 +151,26 @@ footer li a{
     color: white;
 }
 footer li a:hover{
-    color: rgb(61, 192, 236);
+    color: rgb(0, 0, 0);
     transition: 0.4s;
 }
-
+/*voor een rode tekst bij fout melding*/
 .foutmelding1{
     color: red;
 }
 
 .location img {
-    width: 100%; /* Zorg ervoor dat de afbeelding de breedte van de container volgt */
-    max-width: 300px; /* Maximale breedte van de afbeelding */
-    height: auto; /* Zorg ervoor dat de verhoudingen van de afbeelding behouden blijven */
-    margin-bottom: 10px; /* Optioneel, voor wat ruimte onder de afbeelding */
+    width: 100%; 
+    max-width: 300px;
+    height: auto; 
+    margin-bottom: 10px;
+}
+img{
+    border-radius: 15px;
 }
 
 table {
     width: 100%;
-    border-collapse: collapse;
     margin-top: 20px;
 }
 

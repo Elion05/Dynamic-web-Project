@@ -8,6 +8,8 @@
 </head>
 <body>
 
+    
+
     <header>
         <h1>BrusselsExplorer</h1>
         <nav class="navigatie">
@@ -19,9 +21,9 @@
             </ul>
         </nav>
     </header>
-
-    <button id="themeToggle" class="theme-button">Press here for dark mode!</button>
     
+    <button id="themeToggle" class="theme-button">Press here for dark mode!</button>
+
     <main>
         <section id="zoeken">
             <input type="text" id="zoekbar" placeholder="Zoek naar een locatie...">
@@ -37,15 +39,18 @@
             
             <label for="sort">Sorteren op:</label>
             <select id="sorteren">
-                <option value="name">Naam</option>
-                <option value="date">Datum</option>
+                <option value="name">Naam(alfabetische volgorde)</option>
+                <option value="name2">Naam(omgekeerde volgorde)</option>
+                <option value="date">Datum (van oudste naar nieuwste)</option>
+                <option value="date2">Datum (van nieuwste naar oudste)</option>
             </select>
         </section>
         
         <section id="locatiesList">
-            <h2>Locaties</h2>
-            <div id="Locaties">
-                <!-- Alle content van de API zal hier komen, ongeveer 70 locaties -->
+            <h2>🗺️Locaties</h2>
+            <div id="Locaties"> 
+                
+                <!-- Alle content van de API zal hier komen, ongeveer 70 locaties om minder hangt af -->
             </div>
         </section>
 
@@ -55,13 +60,6 @@
             <iframe width="100%" height="500" frameborder="0" 
                 src="https://opendata.brussels.be/explore/embed/dataset/bruxelles_parcours_bd/map/?disjunctive.dessinateur&disjunctive.commune_gemeente&disjunctive.maison_d_edition&disjunctive.realisateur&location=10,50.22279,4.87779&basemap=jawg.sunny" 
                 style="border: 0" allowfullscreen></iframe>
-        </section>
-
-        <section id="favorites">
-            <h2>Favorieten</h2>
-            <div id="favoritenList">
-                <!-- Gebruikersfavorieten -->
-            </div>
         </section>
     </main>
 

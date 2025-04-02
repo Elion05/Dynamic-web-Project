@@ -2,6 +2,7 @@
 // Achtergrond thema switchen
 const backgroundToggle = document.getElementById('themeToggle');
 const body = document.body;
+
 function background() {
     if (body.classList.contains('light-theme')) {
         body.classList.replace('light-theme', 'dark-theme');
@@ -24,63 +25,79 @@ function achtergrondLaden() {
 }
 achtergrondLaden();
 
-document.addEventListener("DOMContentLoaded", function(){
-//HTML-elementen ophalen
-const postContainer = document.getElementById("locaties-container");//container waar de posts komt
-const zoektermInput = document.getElementById("zoekbar");//Inputveld voor zoektermen
-const sorteerSelect = document.getElementById("sorteren");
-const toepassingKnop = document.getElementById('zoekKnop');//Knop om filter toe te passen
-let locatiesPosts = []; //Variable om de opgehaalde posts in op te slaan
 
-async function fetchLocations() {
-    try {
-        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=10");
-        const data = await response.json();
-        locations = data.results;
-        renderLocations();
-    } catch (error) {
-        locatieContainer.innerHTML = "<p class='foutmelding1'>Fout bij het laden van locaties.</p>";
-    }
-}
+document.addEventListener("DOMContentLoaded", function () {
+    // HTML-elementen ophalen
+    const postContainer = document.getElementById("Locaties");
+    const zoektermInput = document.getElementById("zoekbar");
+    const sorteerSelect = document.getElementById("sorteren");
+    const toepassingKnop = document.getElementById('zoekKnop');
+    
+    let locatiesPosts = [];
 
-// Locaties renderen op de pagina
-function renderLocations() {
-    const zoekterm = zoekbar.value.toLowerCase();
-    const selectedCategory = category.value;
-    const sorteerMethode = sorteren.value;
+    async function fetchLocations() {
+        try {
+            const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=20");
 
-    let gefilterdeLocaties = locations.filter(loc => 
-        loc.titre_fr.toLowerCase().includes(zoekterm) || loc.titre_nl.toLowerCase().includes(zoekterm)
-    );
+            if (!response.ok) {
+                throw new Error(`Fout bij ophalen van data: ${response.status} ${response.statusText}`);
+            }
 
-    if (selectedCategory !== "all") {
-        gefilterdeLocaties = gefilterdeLocaties.filter(loc => loc.categorie === selectedCategory);
-    }
+            const data = await response.json();
+            console.log('API Response Data:', data);
 
-    gefilterdeLocaties.sort((a, b) => {
-        if (sorteerMethode === "name") return a.titre_fr.localeCompare(b.titre_fr);
-        if (sorteerMethode === "date") return new Date(b.date) - new Date(a.date);
-    });
-
-    locatieContainer.innerHTML = "";
-
-    if (gefilterdeLocaties.length === 0) {
-        locatieContainer.innerHTML = "<p class='geen-resultaten'>Geen locaties gevonden.</p>";
-        return;
+            if (data && data.records) {
+                locatiesPosts = data.records;  // Correcte toewijzing
+                renderLocaties(); // Data direct weergeven
+            } else {
+                throw new Error("Geen records gevonden in de API-response.");
+            }
+        } catch (error) {
+            console.error('Er is een fout opgetreden:', error);
+            postContainer.innerHTML = "<p class='foutmelding1'>Fout bij het laden van locaties.</p>";
+        }
     }
 
-    gefilterdeLocaties.forEach(loc => {
-        const locElement = document.createElement("div");
-        locElement.classList.add("location");
-        locElement.innerHTML = `
-            <h3>${loc.titre_fr} (${loc.titre_nl})</h3>
-            <p>${loc.description_fr || loc.description_nl || "Geen beschrijving beschikbaar."}</p>
-            <p><strong>Categorie:</strong> ${loc.categorie || "Onbekend"}</p>
-            <p><strong>Adres:</strong> ${loc.adresse_fr || loc.adresse_nl || "Geen adres beschikbaar"}</p>
-        `;
-        locationsList.appendChild(locElement);
-    });
-}
-toepassingKnop.addEventListener("click", renderLocaties);
-fetchLocations();
-})
+    function renderLocaties() {
+        const zoekterm = zoektermInput.value.toLowerCase();
+        const sorteerWaarde = sorteerSelect.value;
+
+        let gefilterdeLocaties = locatiesPosts.filter(post =>
+            post.fields.nom_de_la_fresque.toLowerCase().includes(zoekterm)
+        );
+
+        // Sorteren op basis van de geselecteerde optie
+        if (sorteerWaarde === "Gemeente") {
+            gefilterdeLocaties.sort((a, b) => a.fields.commune_gemeente.localeCompare(b.fields.commune_gemeente));
+        } else if (sorteerWaarde === "name") {
+            gefilterdeLocaties.sort((a, b) => a.fields.nom_de_la_fresque.localeCompare(b.fields.nom_de_la_fresque));
+        } else if (sorteerWaarde === "date") {
+            gefilterdeLocaties.sort((a, b) => new Date(a.fields.date) - new Date(b.fields.date));
+        }
+
+        postContainer.innerHTML = "";
+        if (gefilterdeLocaties.length === 0) {
+            postContainer.innerHTML = "<p class='geen-resultaten'>Geen locaties gevonden.</p>";
+            return;
+        }
+
+        gefilterdeLocaties.forEach(post => {
+            const postElement = document.createElement("div");
+            postElement.classList.add("post");
+            postElement.innerHTML = `
+                <div class="locaties-titel">${post.fields.nom_de_la_fresque.toUpperCase()}</div>
+                <p><strong>Gemeente:</strong> ${post.fields.commune_gemeente || "Onbekend"}</p>
+                <p><strong>Tekenaar:</strong> ${post.fields.dessinateur || "Onbekend"}</p>
+                <p><strong>Datum:</strong> ${post.fields.date || "Onbekend"}</p>
+                <p><strong>Adres:</strong> ${post.fields.adresse || "Onbekend"}</p>
+                <p><strong>Oppervlakte:</strong> ${post.fields.surface_m2 || "Onbekend"} m²</p>
+                <a href="${post.fields.lien_site_parcours_bd}" target="_blank">Meer info</a>
+                <img src="${post.fields.image}" alt="Fresco image" class="fotos"/>
+            `;
+            postContainer.appendChild(postElement);
+        });
+    }
+
+    toepassingKnop.addEventListener("click", renderLocaties);
+    fetchLocations();
+});

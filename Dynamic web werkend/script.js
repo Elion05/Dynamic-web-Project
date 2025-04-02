@@ -1,4 +1,5 @@
 "use strict";
+//loader element
 
 // Achtergrond thema switchen
 const backgroundToggle = document.getElementById('themeToggle');
@@ -16,7 +17,6 @@ function background() {
     }
 }
 backgroundToggle.addEventListener('click', background);
-
 function achtergrondLaden() {
     const savedBackground = localStorage.getItem('theme');
     if (savedBackground) {
@@ -34,29 +34,23 @@ const category = document.getElementById("category");
 const sorteren = document.getElementById("sorteren");
 let locations = [];
 
+
 // API-data ophalen
 async function fetchLocations() {
     try {
         const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=20");
-
-        if (!response.ok) {
-            throw new Error(`Fout bij ophalen van data: ${response.status} ${response.statusText}`);
-        }
-
+        
         const data = await response.json();
         console.log('API Response Data:', data);
 
-        // Gebruik de juiste array: results, niet records
         if (data && data.results) {
             locations = data.results;  // Verander naar results
             renderLocations();
-        } else {
-            throw new Error("Geen records gevonden in de API-response.");
-        }
+        }   
 
     } catch (error) {
         console.error('Er is een fout opgetreden:', error);
-        locatieContainer.innerHTML = "<p class='foutmelding1'>Fout bij het laden van locaties.</p>";
+        locatieContainer.innerHTML = "<p class='foutmelding1'>❌Fout bij het laden van locaties.❌</p>";
     }
 }
 
@@ -72,68 +66,94 @@ function renderLocations() {
 
     // Filteren op categorie (indien nodig)
     if (selectedCategory !== "all") {
-        gefilterdeLocaties = gefilterdeLocaties.filter(loc => loc.categorie === selectedCategory);
+        gefilterdeLocaties = gefilterdeLocaties.filter(loc => 
+            loc.commune_gemeente.toLowerCase() === selectedCategory.toLowerCase()
+        );
     }
-
-    // Sorteren
+    //Sorteren op naam en datum
     gefilterdeLocaties.sort((a, b) => {
-        if (sorteerMethode === "name") return a.naam_fresco_nl.localeCompare(b.naam_fresco_nl);
-        if (sorteerMethode === "date") return new Date(b.date) - new Date(a.date);
+        if (sorteerMethode === "name") return a.dessinateur.localeCompare(b.dessinateur);
+        if (sorteerMethode === "name2") return b.dessinateur.localeCompare(a.dessinateur);
+        if (sorteerMethode === "date") return new Date(a.date) - new Date(b.date);
+        if (sorteerMethode === "date2") return new Date(b.date) - new Date(a.date);
     });
 
     locatieContainer.innerHTML = "";  // Clear container
 
     if (gefilterdeLocaties.length === 0) {
-        locatieContainer.innerHTML = "<p class='geen-resultaten'>Geen locaties gevonden.</p>";
+        locatieContainer.innerHTML = "<p class='geen-resultaten'>❌Geen locaties gevonden.❌</p>";
         return;
     }
 
-    // Maak de tabel
+    // Maak de tabel voor alle informatie
     const tabel = document.createElement('table');
     tabel.style.width = '100%';
-    tabel.style.border = '1px solid #ddd';
+    tabel.style.border = '2px solid #ddd';
     tabel.style.borderCollapse = 'collapse';
 
-    // Tabel kop
+    
     const header = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['Titel', 'Categorie', 'Adres', 'Afbeelding'];
+    const headers = ['Muurschildering', 'Tekenaar', 'Datum', 'Adres','Uitgeverij', 'Afbeelding'];
     headers.forEach(headerText => {
         const th = document.createElement('th');
         th.textContent = headerText;
         th.style.padding = '10px';
         th.style.textAlign = 'left';
-        th.style.borderBottom = '2px solid #ddd';
+        th.style.borderBottom = '4px solid #ddd';
         headerRow.appendChild(th);
     });
     header.appendChild(headerRow);
     tabel.appendChild(header);
 
-    // Tabel body vullen met locaties
+    //de table aanvullen met de locaties
     const body = document.createElement('tbody');
     gefilterdeLocaties.forEach(loc => {
+
         const row = document.createElement('tr');
 
-        // Titel
-        const titleCell = document.createElement('td');
-        titleCell.textContent = `${loc.nom_de_la_fresque} (${loc.naam_fresco_nl})`;
-        titleCell.style.padding = '10px';
-        titleCell.style.borderBottom = '1px solid #ddd';
-        row.appendChild(titleCell);
+        //de titel const customizen
+        const schilderijNaam = document.createElement('td');
+        schilderijNaam.textContent = `${loc.nom_de_la_fresque}(${loc.naam_fresco_nl})`;
+        schilderijNaam.style.padding = '10px';
+        schilderijNaam.style.borderBottom = '10px solid #ddd';
 
-        // Categorie
-        const categoryCell = document.createElement('td');
-        categoryCell.textContent = loc.categorie || 'Onbekend';
-        categoryCell.style.padding = '10px';
-        categoryCell.style.borderBottom = '1px solid #ddd';
-        row.appendChild(categoryCell);
+        //aangemaakte element teovoegen
+        row.appendChild(schilderijNaam);
 
-        // Adres
-        const addressCell = document.createElement('td');
-        addressCell.textContent = loc.adresse || loc.adres || 'Geen adres beschikbaar';
-        addressCell.style.padding = '10px';
-        addressCell.style.borderBottom = '1px solid #ddd';
-        row.appendChild(addressCell);
+    
+        //tekenaar const 
+        const tekenaar = document.createElement('td');
+        tekenaar.textContent = `${loc.dessinateur}`;
+        tekenaar.style.padding = '10px';
+        tekenaar.style.borderBottom = '10px solid #ddd';
+        //
+        row.appendChild(tekenaar);
+
+
+        //datum const
+        const datum = document.createElement('td');
+        datum.textContent = `${loc.date}`
+        datum.style.padding = '10px';
+        datum.style.borderBottom = '10px solid #ddd';
+        //
+        row.appendChild(datum);
+
+        //Adres const
+        const address = document.createElement('td');
+        address.textContent = loc.adresse || loc.adres || 'Geen adres beschikbaar';
+        address.style.padding = '10px';
+        address.style.borderBottom = '10px solid #ddd';
+        row.appendChild(address);
+        
+        //Uitgeverij
+        const uitgeverij = document.createElement('td');
+        uitgeverij.textContent = `${loc.maison_d_edition}` || 'geen uitgeverij beschikbaar';
+        uitgeverij.style.padding = '10px';
+        uitgeverij.style.borderBottom= '10px solid #ddd'
+        row.appendChild(uitgeverij);
+
+     
 
         // Afbeelding
         const imageCell = document.createElement('td');
@@ -142,10 +162,10 @@ function renderLocations() {
         img.alt = loc.nom_de_la_fresque || 'Locatie afbeelding';
         imageCell.appendChild(img);
         imageCell.style.padding = '10px';
-        imageCell.style.borderBottom = '1px solid #ddd';
+        imageCell.style.borderBottom = '10px solid #ddd';
         row.appendChild(imageCell);
-
         body.appendChild(row);
+
     });
     tabel.appendChild(body);
     locatieContainer.appendChild(tabel);

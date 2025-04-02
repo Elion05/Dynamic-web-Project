@@ -155,43 +155,15 @@ footer li a:hover{
     transition: 0.4s;
 }
 
-.foutmelding1{
-    color: red;
-}
-
-.location img {
-    width: 100%; /* Zorg ervoor dat de afbeelding de breedte van de container volgt */
-    max-width: 300px; /* Maximale breedte van de afbeelding */
-    height: auto; /* Zorg ervoor dat de verhoudingen van de afbeelding behouden blijven */
-    margin-bottom: 10px; /* Optioneel, voor wat ruimte onder de afbeelding */
-}
-
-table {
+.fotos {
     width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-}
-
-img {
-    width: 150px;
+    max-width: 300px;
     height: auto;
+    display: block;
+    margin-top: 10px;
 }
 
-/* Alle afbeeldingen in de tabel hetzelfde formaat geven */
-table img {
-    width: 200px;     /* Standaard breedte van de afbeelding */
-    height: 200px;    /* Standaard hoogte van de afbeelding */
-    object-fit: cover; /* Zorgt ervoor dat de afbeelding proportioneel binnen het vak past zonder vervorming */
-}
+
+
+
 
