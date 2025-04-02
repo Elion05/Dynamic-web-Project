@@ -31,69 +31,79 @@ function achtergrondLaden() {
 achtergrondLaden();
 
 
-// HTML-elementen ophalen
-const locatieContainer = document.getElementById("Locaties");
-const zoekbar = document.getElementById("zoekbar");
-const zoekKnop = document.getElementById("zoekKnop");
-const category = document.getElementById("category");
-const sorteren = document.getElementById("sorteren");
-let locations = [];
+document.addEventListener('DOMContentLoaded', () => {
+    const apiUrl = 'https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=70';  // URL van de API
+    const locatieContainer = document.getElementById('Locaties');
+    const zoekKnop = document.getElementById('zoekKnop');
+    const zoekbar = document.getElementById('zoekbar');
+    const categorySelect = document.getElementById('category');
+    const sorterenSelect = document.getElementById('sorteren');
 
-// API-data ophalen
-async function fetchLocations() {
-    try {
-        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=10");
-        const data = await response.json();
-        locations = data.results;
-        renderLocations();
-    } catch (error) {
-        locatieContainer.innerHTML = "<p class='foutmelding1'>Fout bij het laden van locaties.</p>";
-    }
-}
+    // Functie om de API te halen en weer te geven
+    const haalLocatiesOp = () => {
+        fetch(apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                const locaties = data.records;
+                const filterCategorie = categorySelect.value;
+                const zoekTerm = zoekbar.value.toLowerCase();
 
-// Locaties renderen op de pagina
-function renderLocations() {
-    const zoekterm = zoekbar.value.toLowerCase();
-    const selectedCategory = category.value;
-    const sorteerMethode = sorteren.value;
+                // Filteren van de locaties
+                const gefilterdeLocaties = locaties.filter(record => {
+                    const title = record.fields.title.toLowerCase();
+                    const category = record.fields.category ? record.fields.category.toLowerCase() : ''; // Beschermt tegen lege categorieën
+                    const isCategorieMatch = filterCategorie === 'all' || category.includes(filterCategorie);
+                    const isZoekMatch = title.includes(zoekTerm);
 
-    let gefilterdeLocaties = locations.filter(loc => 
-        loc.titre_fr.toLowerCase().includes(zoekterm) || loc.titre_nl.toLowerCase().includes(zoekterm)
-    );
+                    return isCategorieMatch && isZoekMatch;
+                });
 
-    if (selectedCategory !== "all") {
-        gefilterdeLocaties = gefilterdeLocaties.filter(loc => loc.categorie === selectedCategory);
-    }
+                // Sorteren van de locaties
+                const gesorteerdeLocaties = gefilterdeLocaties.sort((a, b) => {
+                    if (sorterenSelect.value === 'name') {
+                        return a.fields.title.localeCompare(b.fields.title);
+                    } else if (sorterenSelect.value === 'date') {
+                        // Zorg ervoor dat de datums correct worden vergeleken
+                        const dateA = new Date(a.fields.date);
+                        const dateB = new Date(b.fields.date);
+                        return dateA - dateB;
+                    }
+                    return 0;
+                });
 
-    gefilterdeLocaties.sort((a, b) => {
-        if (sorteerMethode === "name") return a.titre_fr.localeCompare(b.titre_fr);
-        if (sorteerMethode === "date") return new Date(b.date) - new Date(a.date);
-    });
+                // Weergeven van de locaties
+                locatieContainer.innerHTML = ''; // Maak de lijst leeg voordat je nieuwe locaties toevoegt
+                if (gesorteerdeLocaties.length > 0) {
+                    gesorteerdeLocaties.forEach(record => {
+                        const locatieDiv = document.createElement('div');
+                        locatieDiv.classList.add('locatie');
+                        locatieDiv.innerHTML = `
+                            <h3>${record.fields.title}</h3>
+                            <p>${record.fields.description || 'Geen beschrijving beschikbaar.'}</p>
+                            <p><strong>Categorie:</strong> ${record.fields.category || 'Geen categorie'}</p>
+                        `;
+                        locatieContainer.appendChild(locatieDiv);
+                    });
+                } else {
+                    // Als geen locaties passen bij de zoekopdracht of filters
+                    locatieContainer.innerHTML = '<p>Geen locaties gevonden die aan de zoekcriteria voldoen.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Fout bij het ophalen van de data:', error);
+                locatieContainer.innerHTML = '<p>Er is een fout opgetreden bij het ophalen van de locaties.</p>';
+            });
+    };
 
-    locatieContainer.innerHTML = "";
+    // Event listener voor de zoekknop
+    zoekKnop.addEventListener('click', haalLocatiesOp);
 
-    if (gefilterdeLocaties.length === 0) {
-        locatieContainer.innerHTML = "<p class='geen-resultaten'>Geen locaties gevonden.</p>";
-        return;
-    }
+    // Event listener voor het filteren van de categorie
+    categorySelect.addEventListener('change', haalLocatiesOp);
 
-    gefilterdeLocaties.forEach(loc => {
-        const locElement = document.createElement("div");
-        locElement.classList.add("location");
-        locElement.innerHTML = `
-            <h3>${loc.titre_fr} (${loc.titre_nl})</h3>
-            <p>${loc.description_fr || loc.description_nl || "Geen beschrijving beschikbaar."}</p>
-            <p><strong>Categorie:</strong> ${loc.categorie || "Onbekend"}</p>
-            <p><strong>Adres:</strong> ${loc.adresse_fr || loc.adresse_nl || "Geen adres beschikbaar"}</p>
-        `;
-        locationsList.appendChild(locElement);
-    });
-}
+    // Event listener voor het sorteren van de locaties
+    sorterenSelect.addEventListener('change', haalLocatiesOp);
 
-// Event listeners
-zoekKnop.addEventListener("click", renderLocations);
-category.addEventListener("change", renderLocations);
-sorteren.addEventListener("change", renderLocations);
-
-// Data ophalen bij het laden van de pagina
-fetchLocations();
+    // Haal de locaties op bij het laden van de pagina
+    haalLocatiesOp();
+});
