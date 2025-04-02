@@ -14,6 +14,7 @@ function background() {
     }
 }
 backgroundToggle.addEventListener('click', background);
+
 function achtergrondLaden() {
     const savedBackground = localStorage.getItem('theme');
     if (savedBackground) {
@@ -22,7 +23,6 @@ function achtergrondLaden() {
     }
 }
 achtergrondLaden();
-
 
 document.addEventListener("DOMContentLoaded", function(){
 //HTML-elementen ophalen
@@ -34,62 +34,53 @@ let locatiesPosts = []; //Variable om de opgehaalde posts in op te slaan
 
 async function fetchLocations() {
     try {
-        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=70");
- 
-        if (!response.ok) {
-            throw new Error(`Fout bij ophalen van data: ${response.status} ${response.statusText}`);
-        }
- 
+        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=10");
         const data = await response.json();
-        console.log('API Response Data:', data);
- 
-        // Gebruik de juiste array: results, niet records
-        if (data && data.results) {
-            locatiesPosts = data.results;  // Verander naar results
-            renderLocations();
-
-        } else {
-            throw new Error("Geen records gevonden in de API-response.");
-        }
- 
+        locations = data.results;
+        renderLocations();
     } catch (error) {
-        console.error('Er is een fout opgetreden:', error);
-        postContainer.innerHTML = "<p>Zoek jouw locatie </p>";
+        locatieContainer.innerHTML = "<p class='foutmelding1'>Fout bij het laden van locaties.</p>";
     }
 }
-//Functie om de locaties te filteren en te sorteren
-function renderLocaties () {
-    //De zoekterm ophalen en omzetten naar kleine letters voor case-insensitive zoeken
-    const zoekterm = zoektermInput.value.toLowerCase();
-    const sorteerWaarde = sorteerSelect.value;   //De gekozen sorteervolgorde ophalen
 
-    //filteren
-    let gefilterdeLocaties = locatiesPosts.filter(post =>
-    post.nom_de_la_fresque.toLowerCase().includes(zoekterm));
+// Locaties renderen op de pagina
+function renderLocations() {
+    const zoekterm = zoekbar.value.toLowerCase();
+    const selectedCategory = category.value;
+    const sorteerMethode = sorteren.value;
 
+    let gefilterdeLocaties = locations.filter(loc => 
+        loc.titre_fr.toLowerCase().includes(zoekterm) || loc.titre_nl.toLowerCase().includes(zoekterm)
+    );
 
-    if(sorteerWaarde === "Gemeente"){
-        gefilterdeLocaties.sort((a, b) => a.commune_gemeente.localeCompare(b.commune_gemeente));
-    }else if(sorteerWaarde === "name"){
-        gefilterdeLocaties.sort((a,b) => a.nom_de_la_fresque.localeCompare(b.nom_de_la_fresque));
+    if (selectedCategory !== "all") {
+        gefilterdeLocaties = gefilterdeLocaties.filter(loc => loc.categorie === selectedCategory);
     }
-    postContainer.innerHTML = "";
-    if(gefilterdeLocaties.length === 0){
-        postContainer.innerHTML = "<p class='foutmelding1'><strong>Geen locaties gevonden.</strong></p>";
+
+    gefilterdeLocaties.sort((a, b) => {
+        if (sorteerMethode === "name") return a.titre_fr.localeCompare(b.titre_fr);
+        if (sorteerMethode === "date") return new Date(b.date) - new Date(a.date);
+    });
+
+    locatieContainer.innerHTML = "";
+
+    if (gefilterdeLocaties.length === 0) {
+        locatieContainer.innerHTML = "<p class='geen-resultaten'>Geen locaties gevonden.</p>";
         return;
     }
-    gefilterdeLocaties.forEach(post => {
-        const postElement = document.createElement("div");
-        postElement.classList.add("post");
-        postElement.innerHTML = `<div class="locaties-titel">${post.nom_de_la_fresque.toUpperCase()}</div>
-        <p><strong>Gemeente:</strong>
-        ${post.commune_gemeente || "Onbekend"}</p>
-        
+
+    gefilterdeLocaties.forEach(loc => {
+        const locElement = document.createElement("div");
+        locElement.classList.add("location");
+        locElement.innerHTML = `
+            <h3>${loc.titre_fr} (${loc.titre_nl})</h3>
+            <p>${loc.description_fr || loc.description_nl || "Geen beschrijving beschikbaar."}</p>
+            <p><strong>Categorie:</strong> ${loc.categorie || "Onbekend"}</p>
+            <p><strong>Adres:</strong> ${loc.adresse_fr || loc.adresse_nl || "Geen adres beschikbaar"}</p>
         `;
-        postContainer.appendChild(postElement);
+        locationsList.appendChild(locElement);
     });
 }
 toepassingKnop.addEventListener("click", renderLocaties);
 fetchLocations();
-});
-
+})
