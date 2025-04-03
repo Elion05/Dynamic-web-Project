@@ -1,32 +1,5 @@
 "use strict";
 
-// Achtergrond thema switchen
-const backgroundToggle = document.getElementById("themeToggle");
-const body = document.body;
-
-const background = () => {
-    if (body.classList.contains("light-theme")) {
-        body.classList.replace("light-theme", "dark-theme");
-        backgroundToggle.textContent = "Press here for light mode!";
-        localStorage.setItem("theme", "dark-theme");
-    } else {
-        body.classList.replace("dark-theme", "light-theme");
-        backgroundToggle.textContent = "Press here for dark mode!";
-        localStorage.setItem("theme", "light-theme");
-    }
-};
-backgroundToggle.addEventListener("click", background);
-
-const achtergrondLaden = () => {
-    const savedBackground = localStorage.getItem("theme");
-    if (savedBackground) {
-        body.className = savedBackground;
-        backgroundToggle.textContent =
-            savedBackground === "dark-theme" ? "Press here for light mode!" : "Press here for dark mode!";
-    }
-};
-achtergrondLaden();
-
 // HTML-elementen ophalen
 const locatieContainer = document.getElementById("Locaties");
 const zoekbar = document.getElementById("zoekbar");
@@ -61,12 +34,9 @@ const renderLocations = () => {
     const geselecteerdeGemeente = category.value.toLowerCase();
 
     let gefilterdeLocaties = locations.filter((loc) =>
-        (loc.naam_fresco_nl?.toLowerCase().includes(zoekterm) ||
-            loc.nom_de_la_fresque?.toLowerCase().includes(zoekterm) ||
+        (loc.nom_de_la_fresque?.toLowerCase().includes(zoekterm) ||
             loc.dessinateur?.toLowerCase().includes(zoekterm) ||
-            loc.adres?.toLowerCase().includes(zoekterm) ||
-            loc.date?.toLowerCase().includes(zoekterm) ||
-            loc.maison_d_edition?.toLowerCase().includes(zoekterm))
+            loc.adres?.toLowerCase().includes(zoekterm))
     );
 
     if (geselecteerdeGemeente !== "all") {
@@ -75,14 +45,6 @@ const renderLocations = () => {
         );
     }
 
-    // Sorteren
-    gefilterdeLocaties.sort((a, b) => {
-        if (sorteerMethode === "name") return a.dessinateur.localeCompare(b.dessinateur);
-        if (sorteerMethode === "name2") return b.dessinateur.localeCompare(a.dessinateur);
-        if (sorteerMethode === "date") return new Date(a.date) - new Date(b.date);
-        if (sorteerMethode === "date2") return new Date(b.date) - new Date(a.date);
-    });
-
     locatieContainer.innerHTML = ""; // Clear container
 
     if (gefilterdeLocaties.length === 0) {
@@ -90,56 +52,48 @@ const renderLocations = () => {
         return;
     }
 
+    const tabel = createTable(gefilterdeLocaties, true);
+    locatieContainer.appendChild(tabel);
+};
+
+// **Tabel genereren**
+const createTable = (locaties, isMainTable = false) => {
     const tabel = document.createElement("table");
-
-    const header = document.createElement("thead");
-    const headerRow = document.createElement("tr");
-    const headers = ["Muurschildering", "Tekenaar", "Jaar", "Adres", "Uitgeverij", "Afbeelding", "Favoriet"];
-    headers.forEach((headerText) => {
-        const th = document.createElement("th");
-        th.textContent = headerText;
-        headerRow.appendChild(th);
-    });
-    header.appendChild(headerRow);
-    tabel.appendChild(header);
-
+    tabel.innerHTML = `
+        <thead>
+            <tr>
+                <th>Muurschildering</th>
+                <th>Tekenaar</th>
+                <th>Jaar</th>
+                <th>Adres</th>
+                <th>Uitgeverij</th>
+                <th>Afbeelding</th>
+                <th>Favoriet</th>
+            </tr>
+        </thead>
+    `;
+    
     const body = document.createElement("tbody");
 
-    gefilterdeLocaties.forEach((loc) => {
+    locaties.forEach((loc) => {
         const row = document.createElement("tr");
 
-        const schilderijNaam = document.createElement("td");
-        schilderijNaam.textContent = `${loc.nom_de_la_fresque || ""} (${loc.naam_fresco_nl || ""})`;
-        row.appendChild(schilderijNaam);
+        row.innerHTML = `
+            <td>${loc.nom_de_la_fresque || "Onbekend"}</td>
+            <td>${loc.dessinateur || "Onbekend"}</td>
+            <td>${loc.date || "Onbekend"}</td>
+            <td>${loc.adresse || loc.adres || "Geen adres beschikbaar"}</td>
+            <td>${loc.maison_d_edition || "Onbekend"}</td>
+            <td>
+                <img src="${loc.image || "geen afbeelding beschikbaar"}" alt="Afbeelding van ${loc.nom_de_la_fresque}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;">
+            </td>
+        `;
 
-        const tekenaar = document.createElement("td");
-        tekenaar.textContent = loc.dessinateur || "Onbekend";
-        row.appendChild(tekenaar);
-
-        const datum = document.createElement("td");
-        datum.textContent = loc.date || "Onbekend";
-        row.appendChild(datum);
-
-        const address = document.createElement("td");
-        address.textContent = loc.adresse || loc.adres || "Geen adres beschikbaar";
-        row.appendChild(address);
-
-        const uitgeverij = document.createElement("td");
-        uitgeverij.textContent = loc.maison_d_edition || "Onbekend";
-        row.appendChild(uitgeverij);
-
-        const imageCell = document.createElement("td");
-        const img = document.createElement("img");
-        img.src = loc.image || "geen afbeelding beschikbaar";
-        img.alt = loc.nom_de_la_fresque || "Geen afbeelding";
-        imageCell.appendChild(img);
-        row.appendChild(imageCell);
-
-        // Favorieten-knop
+        // **Favorieten-knop**
         const favorietCell = document.createElement("td");
         const favorietenKnop = document.createElement("button");
         favorietenKnop.textContent = favorieten.some((fav) => fav.nom_de_la_fresque === loc.nom_de_la_fresque) ? "⭐" : "☆";
-        favorietenKnop.addEventListener("click", () => toggleFavoriet(loc, favorietenKnop));
+        favorietenKnop.addEventListener("click", () => toggleFavoriet(loc, favorietenKnop, isMainTable));
         favorietCell.appendChild(favorietenKnop);
         row.appendChild(favorietCell);
 
@@ -147,11 +101,11 @@ const renderLocations = () => {
     });
 
     tabel.appendChild(body);
-    locatieContainer.appendChild(tabel);
+    return tabel;
 };
 
-// Favoriet toevoegen
-const toggleFavoriet = (locatie, knop) => {
+// Favoriet toevoegen/verwijderen
+const toggleFavoriet = (locatie, knop, isMainTable) => {
     const index = favorieten.findIndex((fav) => fav.nom_de_la_fresque === locatie.nom_de_la_fresque);
     if (index === -1) {
         favorieten.push(locatie);
@@ -162,23 +116,24 @@ const toggleFavoriet = (locatie, knop) => {
     }
     localStorage.setItem("favorieten", JSON.stringify(favorieten));
     renderFavorieten();
+    
+    if (!isMainTable) renderLocations(); // Update de hoofdlocatielijst
 };
 
-// Favorieten weergeven
+// **Favorieten weergeven**
 const renderFavorieten = () => {
     favorietenContainer.innerHTML = "";
+
     if (favorieten.length === 0) {
         favorietenContainer.innerHTML = "<p>Geen favorieten geselecteerd.</p>";
         return;
     }
-    favorieten.forEach((fav) => {
-        const p = document.createElement("p");
-        p.textContent = fav.nom_de_la_fresque || "Onbekend";
-        favorietenContainer.appendChild(p);
-    });
+
+    const tabel = createTable(favorieten);
+    favorietenContainer.appendChild(tabel);
 };
 
-// Event listeners
+// **Event listeners**
 zoekKnop.addEventListener("click", renderLocations);
 category.addEventListener("change", renderLocations);
 sorteren.addEventListener("change", renderLocations);
