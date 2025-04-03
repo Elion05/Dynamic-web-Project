@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/Dynamic web werkend/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        .weather-container {
+            max-width: 400px;
+            margin: 0 auto;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+
+
+    <header>
+        <h1>BrusselsExplorer</h1>
+        <nav class="navigatie">
+            <ul>
+                <li><a href="/Dynamic web werkend/index.html">Home</a></li>
+                <li><a href="/Dynamic web werkend/map.html">Interactive map</a></li>
+                <li><a href="#">Instellingen</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <section id="mapList">
+        <h2>Interactiviteit: Locaties op de Kaart</h2>
+        <!-- Kaart via de embed iframe -->
+        <iframe width="100%" height="700" frameborder="0" 
+            src="https://opendata.brussels.be/explore/embed/dataset/bruxelles_parcours_bd/map/?disjunctive.dessinateur&disjunctive.commune_gemeente&disjunctive.maison_d_edition&disjunctive.realisateur&location=10,50.22279,4.87779&basemap=jawg.sunny" 
+            style="border: 0" allowfullscreen></iframe>
+    </section>
+    <footer>
+        <p>&copy; 2025 BrusselsExplorer. Alle rechten voorbehouden.</p>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Locaties</a></li>
+            <li><a href="#">Favorieten</a></li>
+            <li><a href="#">Instellingen</a></li>
+        </ul>
+    </footer>
+<script src="/Dynamic web werkend/script.js"></script>
+</body>
+</html>

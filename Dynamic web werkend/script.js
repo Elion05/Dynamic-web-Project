@@ -57,19 +57,21 @@ async function fetchLocations() {
 // Locaties renderen op de pagina in een tabel
 function renderLocations() {
     const zoekterm = zoekbar.value.toLowerCase();
-    const selectedCategory = category.value;
     const sorteerMethode = sorteren.value;
+    const geselecteerdeGemeente = category.value.toLowerCase();
 
     let gefilterdeLocaties = locations.filter(loc => 
-        loc.naam_fresco_nl.toLowerCase().includes(zoekterm) || loc.nom_de_la_fresque.toLowerCase().includes(zoekterm)
+        loc.naam_fresco_nl.toLowerCase().includes(zoekterm) 
+        || loc.nom_de_la_fresque.toLowerCase().includes(zoekterm)
     );
 
-    // Filteren op categorie (indien nodig)
-    if (selectedCategory !== "all") {
+    if (geselecteerdeGemeente !== "all") {
         gefilterdeLocaties = gefilterdeLocaties.filter(loc => 
-            loc.commune_gemeente.toLowerCase() === selectedCategory.toLowerCase()
+            loc.commune_gemeente && loc.commune_gemeente.toLowerCase().includes(geselecteerdeGemeente)
         );
     }
+   
+   
     //Sorteren op naam en datum
     gefilterdeLocaties.sort((a, b) => {
         if (sorteerMethode === "name") return a.dessinateur.localeCompare(b.dessinateur);
@@ -85,13 +87,15 @@ function renderLocations() {
         return;
     }
 
+    
+
     // Maak de tabel voor alle informatie
     const tabel = document.createElement('table');
     tabel.style.width = '100%';
     tabel.style.border = '2px solid #ddd';
     tabel.style.borderCollapse = 'collapse';
 
-    
+
     const header = document.createElement('thead');
     const headerRow = document.createElement('tr');
     const headers = ['Muurschildering', 'Tekenaar', 'Datum', 'Adres','Uitgeverij', 'Afbeelding'];
@@ -109,7 +113,6 @@ function renderLocations() {
     //de table aanvullen met de locaties
     const body = document.createElement('tbody');
     gefilterdeLocaties.forEach(loc => {
-
         const row = document.createElement('tr');
 
         //de titel const customizen
@@ -165,16 +168,16 @@ function renderLocations() {
         imageCell.style.borderBottom = '10px solid #ddd';
         row.appendChild(imageCell);
         body.appendChild(row);
-
     });
     tabel.appendChild(body);
     locatieContainer.appendChild(tabel);
 }
-
 // Event listeners
 zoekKnop.addEventListener("click", renderLocations);
 category.addEventListener("change", renderLocations);
 sorteren.addEventListener("change", renderLocations);
-
 // Data ophalen bij het laden van de pagina
 fetchLocations();
+
+
+

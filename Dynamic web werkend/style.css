@@ -31,16 +31,15 @@ header {
 
 .navigatie ul li a {
     color: white;
+    display: block;
     text-decoration: none;
     font-weight: bold;
     padding: 10px;
     border-radius: 4px;
     transition: background 0.3s ease;
-}
+};
 
-.navigatie ul li a:hover {
-    color: #000000;
-}
+
 /*Zoekbalk*/
 #zoeken{
     text-align: center;
@@ -52,8 +51,20 @@ header {
     width: 50%;
     border: 1px solid #ccc;
     border-radius: 4px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 2px 2px 5px;
 }
 
+#zoekbar:focus {
+    border-color: #007BFF;
+    background-color: #fff;
+    box-shadow: 2px 2px 8px rgba(0, 123, 255, 0.3);
+}
+#zoekbar:hover{
+    cursor:text;
+}
 #zoekKnop {
     padding: 8px 16px;
     background-color: #426298;
@@ -67,20 +78,12 @@ header {
 #zoekKnop:hover {
     background-color: #4c7fef;
 }
-/*filter decoratie*/
-#filter {
-    background-color: #e5e1e1;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
 
-#locaties, #favorites {
-    background-color: #9bc8f4;
+#filter {
+    background-color: #e4dada;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
 }
 
 h2 {
@@ -88,21 +91,51 @@ h2 {
     font-weight: bold;
     margin-bottom: 10px;
 }
-/*Favorties + locaties*/ 
-#locatiesList, #favoritenList{
+#locaties{
+    background-color: #9bc8f4;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
+/* locaties*/ 
+#locatiesList{
+   
     padding: 10px;
     background-color: #c9c8c8;
     border-radius: 4px;
     border: 1px solid #ddd;
 }
+#favoritesLijst{
+    padding: 10px;
+    background-color: #c9c8c8;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+}
+#favorites{
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+}
 
+#mapList{
+    margin: 100px;
+    padding: 10px;
+    background-color: #c9c8c8;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
 /*Catergorie + sorteren op*/
 select, input {
     padding: 8px;
     margin-right: 10px;
-    border: 1px solid #f6f8f7;
+    border: 1px solid #9bc8f4;
     border-radius: 4px;
-    cursor:pointer
+    cursor:pointer;
+    
 }
 
 /*Dit is voor de localstorage zodat die deze background onthoud*/
@@ -192,7 +225,23 @@ img {
 
 /* Alle afbeeldingen in de tabel hetzelfde formaat geven */
 table img {
-    width: 200px;     /* Standaard breedte van de afbeelding */
-    height: 200px;    /* Standaard hoogte van de afbeelding */
-    object-fit: cover; /* Zorgt ervoor dat de afbeelding proportioneel binnen het vak past zonder vervorming */
+    width: 200px;     
+    height: 200px;    
+    object-fit: cover; 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
