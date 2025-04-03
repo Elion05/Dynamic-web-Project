@@ -165,19 +165,14 @@ const renderLocations = () => {
         row.appendChild(imageCell);
         body.appendChild(row);
 
-        //favorite toevoegen
-        const favoritetoevoegen = document.createElement('button');
-        favoritetoevoegen.textContent = '⭐'
-        row.appendChild(favoritetoevoegen);
+    
+        
 
         //de tabel aan de body toevoegen
     tabel.appendChild(body);
     locatieContainer.appendChild(tabel);
     });
 
-    
-
-    
 }
 
 //event listeners om te filteren en sorteren  en het opzoeken van resultaten
