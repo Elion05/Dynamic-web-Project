@@ -12,4 +12,7 @@ De API dat we hebben gebruikt van opendata.brussels is (lijn 39 api ophalen in j
 We hebben chatgpt gebruikt voor het verbeteren van codes. 
 Meeste code komt van uit de modules die we in de les hebben zelf gezien, zoals de button localstorage, sorteren, tabel.
 
+
 foto van de website![Screenshot 2025-04-03 160830](https://github.com/user-attachments/assets/aeeea2f5-720b-4a85-9a32-6d29235cb252)
+![Screenshot 2025-04-03 180609](https://github.com/user-attachments/assets/a2a92d06-72c9-4de0-989a-ea9def1ad6f7)
+
