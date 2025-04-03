@@ -202,9 +202,7 @@ footer li a:hover{
     height: auto; 
     margin-bottom: 10px;
 }
-img{
-    border-radius: 15px;
-}
+
 
 table {
     width: 100%;
@@ -225,6 +223,7 @@ th {
 img {
     width: 150px;
     height: auto;
+    border-radius: 15px;
 }
 
 /* Alle afbeeldingen in de tabel hetzelfde formaat geven */
