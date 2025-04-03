@@ -40,6 +40,9 @@ header {
 };
 
 
+.navigatie  a:hover {
+    color: #c55c5c;
+}
 /*Zoekbalk*/
 #zoeken{
     text-align: center;
@@ -67,7 +70,7 @@ header {
 }
 #zoekKnop {
     padding: 8px 16px;
-    background-color: #426298;
+    background-color: #22a6db;
     color: white;
     border: none;
     border-radius: 4px;
@@ -76,14 +79,15 @@ header {
 }
 
 #zoekKnop:hover {
-    background-color: #4c7fef;
+    background-color: #6ec9ec;
 }
 
 #filter {
-    background-color: #e4dada;
+    background-color: #22a6db;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
+    color: white;
 }
 
 h2 {
@@ -92,7 +96,7 @@ h2 {
     margin-bottom: 10px;
 }
 #locaties{
-    background-color: #9bc8f4;
+    background-color: #ebeef1;
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 20px;
@@ -100,7 +104,6 @@ h2 {
 }
 /* locaties*/ 
 #locatiesList{
-   
     padding: 10px;
     background-color: #c9c8c8;
     border-radius: 4px;

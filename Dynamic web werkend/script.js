@@ -1,10 +1,7 @@
 "use strict";
-//loader element
-
 // Achtergrond thema switchen
 const backgroundToggle = document.getElementById('themeToggle');
 const body = document.body;
-
 function background() {
     if (body.classList.contains('light-theme')) {
         body.classList.replace('light-theme', 'dark-theme');
@@ -34,11 +31,10 @@ const category = document.getElementById("category");
 const sorteren = document.getElementById("sorteren");
 let locations = [];
 
-
 // API-data ophalen
 async function fetchLocations() {
     try {
-        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=20");
+        const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=70");
         
         const data = await response.json();
         console.log('API Response Data:', data);
@@ -62,15 +58,18 @@ function renderLocations() {
 
     let gefilterdeLocaties = locations.filter(loc => 
         loc.naam_fresco_nl.toLowerCase().includes(zoekterm) 
-        || loc.nom_de_la_fresque.toLowerCase().includes(zoekterm)
+        || loc.nom_de_la_fresque.toLowerCase().includes(zoekterm) ||
+        loc.dessinateur.toLowerCase().includes(zoekterm) || 
+        loc.adres.toLowerCase().includes(zoekterm)||
+        loc.adresse.toLowerCase().includes(zoekterm)||
+        loc.date.toLowerCase().includes(zoekterm)||
+        loc.maison_d_edition.toLowerCase().includes(zoekterm)
     );
-
     if (geselecteerdeGemeente !== "all") {
         gefilterdeLocaties = gefilterdeLocaties.filter(loc => 
             loc.commune_gemeente && loc.commune_gemeente.toLowerCase().includes(geselecteerdeGemeente)
         );
     }
-   
    
     //Sorteren op naam en datum
     gefilterdeLocaties.sort((a, b) => {
@@ -83,12 +82,9 @@ function renderLocations() {
     locatieContainer.innerHTML = "";  // Clear container
 
     if (gefilterdeLocaties.length === 0) {
-        locatieContainer.innerHTML = "<p class='geen-resultaten'>❌Geen locaties gevonden.❌</p>";
+        locatieContainer.innerHTML = "<p class='geen-resultaten'>Geen zoek resultaat gevonden. </p>";
         return;
     }
-
-    
-
     // Maak de tabel voor alle informatie
     const tabel = document.createElement('table');
     tabel.style.width = '100%';
@@ -98,7 +94,7 @@ function renderLocations() {
 
     const header = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['Muurschildering', 'Tekenaar', 'Datum', 'Adres','Uitgeverij', 'Afbeelding'];
+    const headers = ['Muurschildering', 'Tekenaar', 'Jaar', 'Adres','Uitgeverij', 'Afbeelding'];
     headers.forEach(headerText => {
         const th = document.createElement('th');
         th.textContent = headerText;
@@ -151,7 +147,7 @@ function renderLocations() {
         
         //Uitgeverij
         const uitgeverij = document.createElement('td');
-        uitgeverij.textContent = `${loc.maison_d_edition}` || 'geen uitgeverij beschikbaar';
+        uitgeverij.textContent = loc.maison_d_edition || 'Onbekend';
         uitgeverij.style.padding = '10px';
         uitgeverij.style.borderBottom= '10px solid #ddd'
         row.appendChild(uitgeverij);
@@ -162,15 +158,18 @@ function renderLocations() {
         const imageCell = document.createElement('td');
         const img = document.createElement('img');
         img.src = loc.image || 'https://via.placeholder.com/200';  // Default image als geen afbeelding beschikbaar
-        img.alt = loc.nom_de_la_fresque || 'Locatie afbeelding';
+        img.alt = loc.nom_de_la_fresque || 'geen afbeelding beschikbaar';
         imageCell.appendChild(img);
         imageCell.style.padding = '10px';
         imageCell.style.borderBottom = '10px solid #ddd';
         row.appendChild(imageCell);
         body.appendChild(row);
-    });
+        //de tabel aan de body toevoegen
     tabel.appendChild(body);
     locatieContainer.appendChild(tabel);
+    });
+
+    
 }
 // Event listeners
 zoekKnop.addEventListener("click", renderLocations);

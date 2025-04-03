@@ -12,9 +12,8 @@
     
     .navigatie ul li a:hover{
         color: rgb(1, 1, 1);
-        transition: 0.4s ease-in-out;
-
-    }</style>
+    }
+</style>
     <button id="themeToggle" class="theme-button">Press here for dark mode!</button>
 
     <header>
@@ -32,7 +31,7 @@
 
     <main>
         <section id="zoeken">
-            <input type="text" id="zoekbar" placeholder="Zoek naar een muurschildering...">
+            <input type="text" id="zoekbar" placeholder="Zoeken naar....">
             <button id="zoekKnop">Zoeken</button>
         </section>
         
@@ -42,8 +41,11 @@
                 <select id="category">
                     <!--er zijn maar 2 gemeentes dat er in de API stonden....-->
                     <option value="all">Alle gemeenten</option>
-                    <option value="brussel">Brussel</option>
+                    <option value="Haren">Haren</option>
+                    <option value="Brussel">Brussel</option>
                     <option value="Laken">Laken</option>
+                    <option value="Neder-Over-Heembeek">Neder-Over-Heembeek</option>
+                    
                 </select>
             
             </select>
@@ -51,17 +53,11 @@
             <select id="sorteren">
                 <option value="name">Tekenaar naam(alfabetische volgorde)</option>
                 <option value="name2">Tekennaar naam(omgekeerde volgorde)</option>
-                <option value="date">Datum (van oudste naar nieuwste)</option>
-                <option value="date2">Datum (van nieuwste naar oudste)</option>
+                <option value="date">Jaar (van oudste naar nieuwste)</option>
+                <option value="date2">Jaar (van nieuwste naar oudste)</option>
             </select>
         </section>
-
-        <section id="favoritesLijst">
-            <h2>favorites</h2>
-            <div id="favorites"></div>
-        </section>
         
-
         <section id="locatiesList">
             <h2>🗺️Locaties</h2>
             <div id="Locaties"> 
