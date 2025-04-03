@@ -10,7 +10,8 @@ Een een zoekbalk waar je tekenaar naam(nederlands/frans), adres, uitgeverij en d
 De API dat we hebben gebruikt van opendata.brussels is (lijn 39 api ophalen in javascript):https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?
 
 We hebben chatgpt gebruikt voor het verbeteren van codes. 
-Meeste code komt van uit de modules die we in de les hebben zelf gezien, zoals de button localstorage, sorteren, tabel.
+Meeste code komt van uit de modules die we in de les hebben zelf gezien, zoals de button localstorage, sorteren,tabellen maken met javascript createElement, arrays, etc...
+in het algemeen alles wat we in de les hebben gezien.
 
 
 foto van de website![Screenshot 2025-04-03 160830](https://github.com/user-attachments/assets/aeeea2f5-720b-4a85-9a32-6d29235cb252)
