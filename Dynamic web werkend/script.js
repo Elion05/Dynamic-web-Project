@@ -2,7 +2,7 @@
 // Achtergrond thema switchen
 const backgroundToggle = document.getElementById('themeToggle');
 const body = document.body;
-function background() {
+const  background = () => {
     if (body.classList.contains('light-theme')) {
         body.classList.replace('light-theme', 'dark-theme');
         backgroundToggle.textContent = 'Press here for light mode!';
@@ -14,7 +14,7 @@ function background() {
     }
 }
 backgroundToggle.addEventListener('click', background);
-function achtergrondLaden() {
+const achtergrondLaden = () => {
     const savedBackground = localStorage.getItem('theme');
     if (savedBackground) {
         body.className = savedBackground;
@@ -35,13 +35,13 @@ let locations = [];
 async function fetchLocations() {
     try {
         const response = await fetch("https://opendata.brussels.be/api/explore/v2.1/catalog/datasets/bruxelles_parcours_bd/records?limit=70");
-        
         const data = await response.json();
         console.log('API Response Data:', data);
 
-        if (data && data.results) {
-            locations = data.results;  // Verander naar results
-            renderLocations();
+        if (data?.results) {
+            console.log('API DATTA:', data)
+            locations = data.results;
+            renderLocations(data.results);
         }   
 
     } catch (error) {
@@ -49,13 +49,12 @@ async function fetchLocations() {
         locatieContainer.innerHTML = "<p class='foutmelding1'>❌Fout bij het laden van locaties.❌</p>";
     }
 }
-
-// Locaties renderen op de pagina in een tabel
-function renderLocations() {
+// Locaties renderen op de pagina in een tabel en tonen op de site
+const renderLocations = () => {
     const zoekterm = zoekbar.value.toLowerCase();
     const sorteerMethode = sorteren.value;
     const geselecteerdeGemeente = category.value.toLowerCase();
-
+//zoekterm bevestigen en tonen
     let gefilterdeLocaties = locations.filter(loc => 
         loc.naam_fresco_nl.toLowerCase().includes(zoekterm) 
         || loc.nom_de_la_fresque.toLowerCase().includes(zoekterm) ||
@@ -65,12 +64,12 @@ function renderLocations() {
         loc.date.toLowerCase().includes(zoekterm)||
         loc.maison_d_edition.toLowerCase().includes(zoekterm)
     );
+    //schilderij filteren per gemeentes
     if (geselecteerdeGemeente !== "all") {
         gefilterdeLocaties = gefilterdeLocaties.filter(loc => 
             loc.commune_gemeente && loc.commune_gemeente.toLowerCase().includes(geselecteerdeGemeente)
         );
     }
-   
     //Sorteren op naam en datum
     gefilterdeLocaties.sort((a, b) => {
         if (sorteerMethode === "name") return a.dessinateur.localeCompare(b.dessinateur);
@@ -157,21 +156,30 @@ function renderLocations() {
         // Afbeelding
         const imageCell = document.createElement('td');
         const img = document.createElement('img');
-        img.src = loc.image || 'https://via.placeholder.com/200';  // Default image als geen afbeelding beschikbaar
+        img.src = loc.image || 'geen afbeelding beschikbaar';  // Default image als geen afbeelding beschikbaar
         img.alt = loc.nom_de_la_fresque || 'geen afbeelding beschikbaar';
         imageCell.appendChild(img);
         imageCell.style.padding = '10px';
         imageCell.style.borderBottom = '10px solid #ddd';
         row.appendChild(imageCell);
         body.appendChild(row);
+
+        //favorite toevoegen
+        const favoritetoevoegen = document.createElement('button');
+        favoritetoevoegen.textContent = '⭐'
+        row.appendChild(favoritetoevoegen);
+
         //de tabel aan de body toevoegen
     tabel.appendChild(body);
     locatieContainer.appendChild(tabel);
     });
 
     
+
+    
 }
-// Event listeners
+
+//event listeners om te filteren en sorteren  en het opzoeken van resultaten
 zoekKnop.addEventListener("click", renderLocations);
 category.addEventListener("change", renderLocations);
 sorteren.addEventListener("change", renderLocations);

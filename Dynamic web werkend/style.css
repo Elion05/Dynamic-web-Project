@@ -110,6 +110,7 @@ h2 {
     border: 1px solid #ddd;
 }
 #favoritesLijst{
+    margin: 50px;
     padding: 10px;
     background-color: #c9c8c8;
     border-radius: 4px;
