@@ -1,4 +1,6 @@
 "use strict";
+//dit is de definitieve versie
+
 // Achtergrond thema switchen
 const backgroundToggle = document.getElementById('themeToggle');
 const body = document.body;
